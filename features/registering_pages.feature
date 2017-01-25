@@ -178,7 +178,7 @@ Feature: Registering Pages
       belongs_to :post
 
       content do
-        "Status page for #{parent.title}"
+        "Status page for #{helpers.parent.title}"
       end
     end
     """
