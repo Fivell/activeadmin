@@ -85,18 +85,19 @@ module ActiveAdmin
     end
 
     def belongs_to(target, options = {})
-      @belongs_to = Resource::BelongsTo.new(self, target, options)
-      self.navigation_menu_name = target unless @belongs_to.optional?
+      this_belongs_to = Resource::BelongsTo.new(self, target, options)
+      belongs_to_config << this_belongs_to
+      self.navigation_menu_name = target unless this_belongs_to.optional?
       controller.send :belongs_to, target, options.dup
     end
 
     def belongs_to_config
-      @belongs_to
+      @belongs_to ||= []
     end
 
     # Do we belong to another resource?
     def belongs_to?
-      !!belongs_to_config
+      belongs_to_config.length > 0
     end
   end
 end
