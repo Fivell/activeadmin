@@ -99,5 +99,9 @@ module ActiveAdmin
     def belongs_to?
       belongs_to_config.length > 0
     end
+
+    def breadcrumb
+      instance_variable_defined?(:@breadcrumb) ? @breadcrumb : namespace.breadcrumb
+    end
   end
 end

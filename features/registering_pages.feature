@@ -185,4 +185,5 @@ Feature: Registering Pages
     And 1 post with the title "Post 1" exists
     When I go to the first post custom status page
     Then I should see the content "Status page for Post 1"
+    And  I should see a link to "Post 1" in the breadcrumb
 
