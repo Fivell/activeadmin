@@ -36,7 +36,7 @@ module ActiveAdmin
         end
 
         def default_form_path
-          resource.persisted? ? resource_path(resource) : collection_path
+          resource.persisted? ? active_admin_config.route_instance_path(resource, params) : active_admin_config.route_collection_path(params)
         end
 
         def default_form_config
