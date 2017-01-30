@@ -66,7 +66,7 @@ module ActiveAdmin
         def instance_path(instance, additional_params = {})
           route_name = route_name(resource.resources_configuration[:self][:route_instance_name])
 
-          routes.public_send route_name, *route_instance_params(instance), additional_params
+          routes.public_send route_name, *route_instance_params(instance, additional_params), additional_params
         end
 
         # @return [String] the path to the edit page of this resource
@@ -76,7 +76,7 @@ module ActiveAdmin
           path = resource.resources_configuration[:self][:route_instance_name]
           route_name = route_name(path, action: :edit)
 
-          routes.public_send route_name, *route_instance_params(instance), additional_params
+          routes.public_send route_name, *route_instance_params(instance, additional_params), additional_params
         end
 
         private
@@ -98,13 +98,16 @@ module ActiveAdmin
 
 
         # @return params to pass to instance path
-        def route_instance_params(instance)
-          belongs_to_names.reverse.reduce([instance]) do |arr,name| 
-            arr + [arr.last.public_send(name)]
+        def route_instance_params(instance, params = {})
+          belongs_to_names.reverse.reduce([instance.to_param]) do |arr, name|
+            #TODO read from belongs_to config
+            param_key = "#{name}_id"
+            arr + [params[param_key] ]
           end.map{|i| i.to_param }.reverse
         end
 
         def route_collection_params(params)
+          #TODO read from belongs_to config
           belongs_to_names.map{|name| params[:"#{name}_id"]}
         end
 
