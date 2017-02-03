@@ -19,8 +19,8 @@
 
 #### Minor
 
-* Page supports belongs_to [#4759][] by [@Fivell][] and [@zorab47][]
-* Support for custom sorting strategies [#4768][] by [@Fivell][]
+* Page supports belongs_to [#4759][] by [@fivell][] and [@zorab47][]
+* Support for custom sorting strategies [#4768][] by [@fivell][]
 * Stream CSV downloads as they're generated [#3038][] by [@craigmcnamara][]
   * Disable streaming in development for easier debugging [#3535][] by [@seanlinsley][]
 * Improved code reloading [#3783][] by [@chancancode][]
