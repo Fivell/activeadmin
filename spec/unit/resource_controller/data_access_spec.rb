@@ -2,7 +2,13 @@ require 'rails_helper'
 
 RSpec.describe ActiveAdmin::ResourceController::DataAccess do
   before do
-    load_resources { ActiveAdmin.register Post }
+    load_resources { config }
+  end
+
+  let(:config) do
+    ActiveAdmin.register Post do
+      permit_params :body, taggings_attributes: [:id, :tag_id]
+    end
   end
 
   let(:params) do
@@ -12,7 +18,7 @@ RSpec.describe ActiveAdmin::ResourceController::DataAccess do
   let(:controller) do
     rc = Admin::PostsController.new
     allow(rc).to receive(:params) do
-      params
+      ActionController::Parameters.new(params)
     end
     rc
   end
@@ -84,7 +90,7 @@ RSpec.describe ActiveAdmin::ResourceController::DataAccess do
         end
       end
       context "when params not applicable" do
-        let(:params) {{ order: "published_date_asc" }}
+        let(:params) { { order: "published_date_asc" } }
         it "reorders chain" do
           chain = double "ChainObj"
           expect(chain).to receive(:reorder).with('"posts"."published_date" asc').once.and_return(Post.search)
@@ -186,4 +192,27 @@ RSpec.describe ActiveAdmin::ResourceController::DataAccess do
       end
     end
   end
+
+  describe "build_resource" do
+
+    let!(:tag) { Tag.create! }
+
+    let(:params) do
+      { post: { body: 'Body', taggings_attributes: [tag_id: tag.id] } }
+    end
+
+    before do
+      expect(Post).to receive(:new).with(a_hash_including(:body, :taggings_attributes )).and_call_original
+    end
+
+    subject do
+      controller.send :build_resource
+    end
+
+    it 'should return post with assigned attributes' do
+      expect(subject.body).to be_present
+      expect(subject.taggings.size).to eq(1)
+    end
+  end
+
 end
