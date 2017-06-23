@@ -66,7 +66,8 @@ module ActiveAdmin
         if condition_attribute.klass != resource_class && condition_attribute.klass.primary_key == name.to_s
           condition_attribute.klass
         else
-          assoc = condition_attribute.klass.reflect_on_all_associations.detect { |r| r.foreign_key.to_s == name.to_s }
+          assoc = condition_attribute.klass.reflect_on_all_associations.
+            detect { |r| r.foreign_key.to_s == name.to_s && !r.options[:polymorphic] } #skip polymorphic
           assoc.class_name.constantize if assoc
         end
       end
